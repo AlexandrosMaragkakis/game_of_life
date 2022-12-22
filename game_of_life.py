@@ -1,22 +1,35 @@
 import random
 
 def random_state(height, width):
-    
-    board_state = dead_state(height,width)
+    # Create a dead board state using the dead_state function
+    board_state = dead_state(height, width)
 
-    # default threshold = 0.5
-    # TODO make threshold adjustable
+
+    # Generate a random board state by using a list comprehension to generate a list of random 0 or 1 values
+    # threshold == 0.5
     board_state = [[round(random.random()) for _ in range(height)] for _ in range(width)]
+
+    # Return the random board state
     return board_state
+
 
 def dead_state(height, width):
-
+    # Create an empty list to store the board state
     board_state = list()
+
+    # Iterate over the rows of the board
     for i in range(height):
+        # Append an empty list to the board state to represent a new row
         board_state.append([])
+
+        # Iterate over the columns of the board
         for j in range(width):
-            board_state[i].append(0) 
+            # Append a 0 to the current row to represent a dead cell
+            board_state[i].append(0)
+
+    # Return the board state
     return board_state
+
 
 def render(board_state):
     
@@ -44,9 +57,14 @@ def render(board_state):
     # Print the border again to complete the visual representation of the board
     print(topbottom_border)
 
+
+def next_board_state():
+    pass
+
+
 def main():
 
-    height = 20
+    height = 22
     width = 10
     board_state = random_state(height, width)
     render(board_state)
