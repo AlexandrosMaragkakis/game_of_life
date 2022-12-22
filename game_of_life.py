@@ -69,7 +69,7 @@ def next_board_state(initial_state):
 
     for i in range(height):
         for j in range(width):
-
+            alive_neighbours = 0
             # Top-left corner
             if i == 0 and j == 0:
                 alive_neighbours = initial_state[i][j+1] + initial_state[i+1][j+1] + initial_state[i+1][j]
@@ -107,23 +107,26 @@ def next_board_state(initial_state):
                 alive_neighbours = initial_state[i-1][j] + initial_state[i-1][j+1] + initial_state[i][j+1] + initial_state[i+1][j+1] + initial_state[i+1][j] \
                                     + initial_state[i+1][j-1] + initial_state[i][j-1] + initial_state[i-1][j-1]
             
-            if alive_neighbours == 0 or alive_neighbours == 1:
-                new_state[i][j] == DEAD
-            elif alive_neighbours == 2 or alive_neighbours == 3:
-                new_state[i][j] == ALIVE
-            elif alive_neighbours == 3:
-                new_state[i][j] == ALIVE
-            elif alive_neighbours > 3:
-                new_state[i][j] == DEAD
+            cell = initial_state[i][j]
+            if cell == ALIVE:
+                if alive_neighbours == 0 or alive_neighbours == 1:
+                    new_state[i][j] = DEAD
+                elif alive_neighbours > 3:
+                    new_state[i][j] = DEAD
+                else:
+                    new_state[i][j] = ALIVE
+            else:
+                if alive_neighbours == 3:
+                    new_state[i][j] = ALIVE
             
-            return new_state
+    return new_state
 
             
 def main():
 
-    height = 5
-    width = 10
+    height = 3
+    width = 3
     board_state = random_state(height, width)
-    render(board_state)
+    render(next_board_state(board_state))
 
 main()
