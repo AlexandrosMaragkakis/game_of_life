@@ -1,13 +1,15 @@
 import random
 
+DEAD = 0
+ALIVE = 1
+
 def random_state(height, width):
     # Create a dead board state using the dead_state function
     board_state = dead_state(height, width)
 
-
     # Generate a random board state by using a list comprehension to generate a list of random 0 or 1 values
     # threshold == 0.5
-    board_state = [[round(random.random()) for _ in range(height)] for _ in range(width)]
+    board_state = [[round(random.random()) for _ in range(width)] for _ in range(height)]
 
     # Return the random board state
     return board_state
@@ -25,7 +27,7 @@ def dead_state(height, width):
         # Iterate over the columns of the board
         for j in range(width):
             # Append a 0 to the current row to represent a dead cell
-            board_state[i].append(0)
+            board_state[i].append(DEAD)
 
     # Return the board state
     return board_state
@@ -58,13 +60,68 @@ def render(board_state):
     print(topbottom_border)
 
 
-def next_board_state():
-    pass
+def next_board_state(initial_state):
+    
+    height = len(initial_state)
+    width = len(initial_state[0])
+    new_state = dead_state(height, width)
 
 
+    for i in range(height):
+        for j in range(width):
+
+            # Top-left corner
+            if i == 0 and j == 0:
+                alive_neighbours = initial_state[i][j+1] + initial_state[i+1][j+1] + initial_state[i+1][j]
+
+            # Top-right corner
+            elif i == 0 and j == width-1:
+                alive_neighbours = initial_state[i+1][j] + initial_state[i+1][j-1] + initial_state[i][j-1]
+
+            # Top row except corners
+            elif i == 0:
+                alive_neighbours = initial_state[i][j+1] + initial_state[i+1][j+1] + initial_state[i+1][j] + initial_state[i+1][j-1] + initial_state[i][j-1]
+
+            # Bottom-left corner
+            elif i == height-1 and j == 0:
+                alive_neighbours = initial_state[i-1][j] + initial_state[i-1][j+1] + initial_state[i][j+1]
+            
+            # Bottom-right corner
+            elif i == height-1 and j == width-1:
+                alive_neighbours = initial_state[i][j-1] + initial_state[i-1][j-1] + initial_state[i-1][j]
+
+            # Bottom row except corners
+            elif i == height-1:
+                alive_neighbours = initial_state[i][j-1] + initial_state[i-1][j-1] + initial_state[i-1][j] + initial_state[i-1][j+1] + initial_state[i][j+1]
+            
+            # Most-left column
+            elif j == 0:
+                alive_neighbours = initial_state[i-1][j] + initial_state[i-1][j+1] + initial_state[i][j+1] + initial_state[i+1][j+1] + initial_state[i+1][j]
+            
+            # Most-right column
+            elif j == width-1:
+                alive_neighbours = initial_state[i+1][j] + initial_state[i+1][j-1] + initial_state[i][j-1] + initial_state[i-1][j-1] + initial_state[i-1][j]
+            
+            # Everywhere else
+            else:
+                alive_neighbours = initial_state[i-1][j] + initial_state[i-1][j+1] + initial_state[i][j+1] + initial_state[i+1][j+1] + initial_state[i+1][j] \
+                                    + initial_state[i+1][j-1] + initial_state[i][j-1] + initial_state[i-1][j-1]
+            
+            if alive_neighbours == 0 or alive_neighbours == 1:
+                new_state[i][j] == DEAD
+            elif alive_neighbours == 2 or alive_neighbours == 3:
+                new_state[i][j] == ALIVE
+            elif alive_neighbours == 3:
+                new_state[i][j] == ALIVE
+            elif alive_neighbours > 3:
+                new_state[i][j] == DEAD
+            
+            return new_state
+
+            
 def main():
 
-    height = 22
+    height = 5
     width = 10
     board_state = random_state(height, width)
     render(board_state)
