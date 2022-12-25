@@ -1,21 +1,27 @@
 import random
+import time
+import os
 
 DEAD = 0
 ALIVE = 1
 
+
 def random_state(height, width):
+
     # Create a dead board state using the dead_state function
     board_state = dead_state(height, width)
 
     # Generate a random board state by using a list comprehension to generate a list of random 0 or 1 values
     # threshold == 0.5
-    board_state = [[round(random.random()) for _ in range(width)] for _ in range(height)]
+    board_state = [[round(random.random()) for _ in range(width)]
+                   for _ in range(height)]
 
     # Return the random board state
     return board_state
 
 
 def dead_state(height, width):
+
     # Create an empty list to store the board state
     board_state = list()
 
@@ -34,7 +40,8 @@ def dead_state(height, width):
 
 
 def render(board_state):
-    
+
+    os.system("clear")
     # Get the width of the board by taking the length of the first row
     width = len(board_state[0])
 
@@ -61,52 +68,64 @@ def render(board_state):
 
 
 def next_board_state(initial_state):
-    
+
     height = len(initial_state)
     width = len(initial_state[0])
     new_state = dead_state(height, width)
-
 
     for i in range(height):
         for j in range(width):
             alive_neighbours = 0
             # Top-left corner
             if i == 0 and j == 0:
-                alive_neighbours = initial_state[i][j+1] + initial_state[i+1][j+1] + initial_state[i+1][j]
+                alive_neighbours = initial_state[i][j+1] + \
+                    initial_state[i+1][j+1] + initial_state[i+1][j]
 
             # Top-right corner
             elif i == 0 and j == width-1:
-                alive_neighbours = initial_state[i+1][j] + initial_state[i+1][j-1] + initial_state[i][j-1]
+                alive_neighbours = initial_state[i+1][j] + \
+                    initial_state[i+1][j-1] + initial_state[i][j-1]
 
             # Top row except corners
             elif i == 0:
-                alive_neighbours = initial_state[i][j+1] + initial_state[i+1][j+1] + initial_state[i+1][j] + initial_state[i+1][j-1] + initial_state[i][j-1]
+                alive_neighbours = initial_state[i][j+1] + initial_state[i+1][j+1] + \
+                    initial_state[i+1][j] + initial_state[i +
+                                                          1][j-1] + initial_state[i][j-1]
 
             # Bottom-left corner
             elif i == height-1 and j == 0:
-                alive_neighbours = initial_state[i-1][j] + initial_state[i-1][j+1] + initial_state[i][j+1]
-            
+                alive_neighbours = initial_state[i-1][j] + \
+                    initial_state[i-1][j+1] + initial_state[i][j+1]
+
             # Bottom-right corner
             elif i == height-1 and j == width-1:
-                alive_neighbours = initial_state[i][j-1] + initial_state[i-1][j-1] + initial_state[i-1][j]
+                alive_neighbours = initial_state[i][j-1] + \
+                    initial_state[i-1][j-1] + initial_state[i-1][j]
 
             # Bottom row except corners
             elif i == height-1:
-                alive_neighbours = initial_state[i][j-1] + initial_state[i-1][j-1] + initial_state[i-1][j] + initial_state[i-1][j+1] + initial_state[i][j+1]
-            
+                alive_neighbours = initial_state[i][j-1] + initial_state[i-1][j-1] + \
+                    initial_state[i-1][j] + initial_state[i -
+                                                          1][j+1] + initial_state[i][j+1]
+
             # Most-left column
             elif j == 0:
-                alive_neighbours = initial_state[i-1][j] + initial_state[i-1][j+1] + initial_state[i][j+1] + initial_state[i+1][j+1] + initial_state[i+1][j]
-            
+                alive_neighbours = initial_state[i-1][j] + initial_state[i-1][j+1] + \
+                    initial_state[i][j+1] + initial_state[i +
+                                                          1][j+1] + initial_state[i+1][j]
+
             # Most-right column
             elif j == width-1:
-                alive_neighbours = initial_state[i+1][j] + initial_state[i+1][j-1] + initial_state[i][j-1] + initial_state[i-1][j-1] + initial_state[i-1][j]
-            
+                alive_neighbours = initial_state[i+1][j] + initial_state[i+1][j-1] + \
+                    initial_state[i][j-1] + initial_state[i -
+                                                          1][j-1] + initial_state[i-1][j]
+
             # Everywhere else
             else:
                 alive_neighbours = initial_state[i-1][j] + initial_state[i-1][j+1] + initial_state[i][j+1] + initial_state[i+1][j+1] + initial_state[i+1][j] \
-                                    + initial_state[i+1][j-1] + initial_state[i][j-1] + initial_state[i-1][j-1]
-            
+                    + initial_state[i+1][j-1] + \
+                    initial_state[i][j-1] + initial_state[i-1][j-1]
+
             cell = initial_state[i][j]
             if cell == ALIVE:
                 if alive_neighbours == 0 or alive_neighbours == 1:
@@ -118,15 +137,20 @@ def next_board_state(initial_state):
             else:
                 if alive_neighbours == 3:
                     new_state[i][j] = ALIVE
-            
+
     return new_state
 
-            
+
 def main():
 
-    height = 3
-    width = 3
+    height = 30
+    width = 50
     board_state = random_state(height, width)
-    render(next_board_state(board_state))
+    render(board_state)
+    while True:
+        board_state = next_board_state(board_state)
+        render(board_state)
+        time.sleep(0.2)
+
 
 main()
