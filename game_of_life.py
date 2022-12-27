@@ -150,7 +150,7 @@ def main():
     while True:
         board_state = next_board_state(board_state)
         render(board_state)
-        time.sleep(0.2)
+        time.sleep(0.4)
 
 
 main()
