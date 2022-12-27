@@ -28,7 +28,7 @@ def dead_state(height, width):
         board_state.append([])
 
         # Iterate over the columns of the board
-        for j in range(width):
+        for _ in range(width):
             # Append a 0 to the current row to represent a dead cell
             board_state[i].append(DEAD)
 
