@@ -8,9 +8,6 @@ ALIVE = 1
 
 def random_state(height, width):
 
-    # Create a dead board state using the dead_state function
-    board_state = dead_state(height, width)
-
     # Generate a random board state by using a list comprehension to generate a list of random 0 or 1 values
     # threshold == 0.5
     board_state = [[round(random.random()) for _ in range(width)]
