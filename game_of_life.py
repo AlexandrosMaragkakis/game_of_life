@@ -1,6 +1,7 @@
 import random
 import time
 import os
+import argparse
 
 DEAD = 0
 ALIVE = 1
@@ -139,15 +140,29 @@ def next_board_state(initial_state):
 
 
 def main():
+    parser = argparse.ArgumentParser(description='Play the game of life')
+    parser.add_argument('-f', '--file', type=str, default=None, help='a text file containing the initial board state')
+    args = parser.parse_args()
+    initial_board_file = args.file
 
-    height = 30
-    width = 50
-    board_state = random_state(height, width)
+    if initial_board_file is None:
+        height = 30
+        width = 50
+        board_state = random_state(height, width)
+        render(board_state)
+    else:
+        with open(initial_board_file, 'r') as f:
+            lines = f.readlines()
+        board_state = []
+        for line in lines:
+            row = [int(x) for x in line.strip()]
+            board_state.append(row)
+    
     render(board_state)
     while True:
         board_state = next_board_state(board_state)
         render(board_state)
-        time.sleep(0.4)
+        time.sleep(0.3)
 
 
 main()
